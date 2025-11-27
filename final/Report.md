@@ -66,6 +66,18 @@ See [Appendix B: Data Dictionary](appendix/B_Data_Dictionary.md) for full schema
 | Random Forest + SMOTE | 0.880 | 0.968 | 0.829 | 0.655 |
 | **XGBoost + SMOTE (final)** | **0.876** | **0.968** | **0.827** | **0.658** |
 
+### 5.1 Confusion Matrix
+
+![Confusion Matrix - XGBoost Final Model](assets/figures/confusion_matrix_ml.png)
+
+*Figure 1: Confusion matrix showing strong diagonal dominance across Declining, Stable, and Improving classes.*
+
+### 5.2 Model Comparison
+
+![Comprehensive Model Comparison](assets/figures/comprehensive_comparison.png)
+
+*Figure 2: XGBoost + SMOTE significantly outperforms baseline approaches across all evaluation metrics.*
+
 See [Appendix A: Results Summary](appendix/A_Results_Summary.md) for detailed metrics.
 
 ---
@@ -76,6 +88,18 @@ See [Appendix A: Results Summary](appendix/A_Results_Summary.md) for detailed me
 2. **Division context** acts as a structural prior
 3. **Gender allocation** correlates with compliance risk
 4. **Per-athlete spend** rewards disciplined allocation
+
+### 6.1 Feature Importance
+
+![Top 20 Feature Importance](assets/figures/feature_importance_top20.png)
+
+*Figure 3: XGBoost feature importance confirms efficiency and temporal lag features dominate predictive power.*
+
+### 6.2 SHAP Interpretability
+
+![SHAP Summary Plot](assets/figures/shap_summary.png)
+
+*Figure 4: SHAP analysis reveals how each feature contributes to trajectory predictions across all three classes.*
 
 ---
 

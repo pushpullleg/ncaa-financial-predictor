@@ -72,6 +72,7 @@ Executes the CLI with a default query ("Alabama") and asserts a valid prediction
    - xgboost==3.1.2
    - imbalanced-learn==0.14.0
    - joblib==1.5.2
+   - shap==0.50.0
 
 3. Verify paths from project root:
    - Model: `final/assets/models/trajectory_model.joblib`

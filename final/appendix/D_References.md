@@ -20,9 +20,13 @@
 
 ---
 
-## Figures (Placeholders)
+## Figures
 
-1. Confusion matrix: baseline vs. final XGBoost
-2. ROC curves for three trajectory classes
-3. SHAP global feature importance plot
-4. Top 15 engineered features table
+| Figure | Description | Location |
+| :--- | :--- | :--- |
+| Figure 1 | Confusion Matrix (XGBoost) | Report §5.1 |
+| Figure 2 | Model Performance Comparison | Report §5.2 |
+| Figure 3 | Top 20 Feature Importance | Report §6.1 |
+| Figure 4 | SHAP Summary Plot | Report §6.2 |
+| Figure A1 | Class Distribution | Appendix A §6.1 |
+| Figure A2 | Feature Importance by Category | Appendix A §6.2 |

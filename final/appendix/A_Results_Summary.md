@@ -64,3 +64,19 @@ The ML pipeline adds +8.2 accuracy points and +0.20 macro-F1 over heuristics.
 2. **Division context is critical.** NCAA division dummies act as structural priors.
 3. **Gender allocation is predictive.** Large imbalances correlate with elevated Declining risk.
 4. **Per-athlete spend matters.** The model rewards disciplined allocation over raw totals.
+
+---
+
+## 6. Visualizations
+
+### 6.1 Class Distribution
+
+![Target Class Distribution](../assets/figures/class_distribution.png)
+
+*Figure A1: Dataset exhibits moderate class imbalance, addressed via SMOTE oversampling during training.*
+
+### 6.2 Feature Importance by Category
+
+![Feature Importance by Category](../assets/figures/feature_importance_by_category.png)
+
+*Figure A2: Aggregated feature importance shows Revenue and Efficiency categories contribute most to predictions.*
