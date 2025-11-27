@@ -1,0 +1,16 @@
+
+Problem Statement:
+Forecast whether NCAA athletic departments will achieve financial surplus in the upcoming year using current institutional characteristics (division, enrollment, participation) and lagged financial indicators (prior year revenue, expenses, efficiency), enabling proactive budget planning and risk assessment.
+
+
+Success Criteria:
+✅ Accuracy > 90% (beats 85.71% persistence baseline)
+✅ ROC-AUC > 0.75 (good discrimination)
+✅ F1-Score > 0.87 (balanced precision/recall)
+
+
+Business Value:
+Budget forecasting: Predict next year's financial position
+Risk identification: Flag institutions likely to struggle
+Division decisions: Model impact of reclassification
+Resource optimization: Data-driven spending recommendations
