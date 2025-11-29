@@ -1,6 +1,6 @@
 # CSCI 538 Final Project Presentation
 
-# Predicting NCAA Athletic Department Financial Trajectories: A Machine Learning Approach
+# Predicting NCAA Athletic Program Financial Trajectories: A Machine Learning Approach
 
 **Mukesh Ravichandran & Abner Lusung**
 **East Texas A&M University**
@@ -43,7 +43,7 @@
 
 ### Slide 3: What is Data Leakage?
 
-**Definition**: When information from outside the training dataset is used to create the model
+**Definition**: When information that would not be available at prediction time inadvertently influences the model during training, creating an illusion of high performance that disappears in real-world deployment
 
 **Two Common Sources of Leakage:**
 
@@ -108,7 +108,7 @@
 | Raw Values | Grand Total Revenue, Grand Total Expenses |
 | Categorical | Division (D1/D2/D3/Other) |
 
-**Forbidden**: Any feature containing "Target", "Label", or "Future_"
+**Important**: These 14 features are the ONLY features in our model. We explicitly avoided common leakage pitfalls (e.g., lagged target labels, future-looking features) that would not be available at prediction time.
 
 ---
 
@@ -154,11 +154,12 @@
 | Approach | Accuracy | vs Baseline |
 |----------|----------|-------------|
 | Random Guessing | 33.3% | — |
-| Most-Frequent Class | 28.3% | — |
+| Most-Frequent Class (Stable) | 28.3% | — |
 | **Our Best Model** | **57.3%** | **+29%** |
 
 **Key Insight**: 
-- 29 percentage points above random baseline
+- Most-Frequent Class baseline: Always predict the most common class (Stable) - achieves 28.3% accuracy
+- Our model: 29 percentage points above this baseline
 - Genuine predictive value for a difficult problem
 - Honest accuracy that stakeholders can trust
 
@@ -177,7 +178,7 @@
 
 ### Slide 11: 2023 Predictions
 
-**Predictions for 1,722 Institutions**
+**Predictions for 1,722 Institutions (using Logistic Regression - best model)**
 
 | Trajectory | Count | Percentage |
 |------------|-------|------------|

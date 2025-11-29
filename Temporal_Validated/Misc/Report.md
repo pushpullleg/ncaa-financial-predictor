@@ -148,6 +148,8 @@ Financial trajectory prediction is inherently uncertain. A model that achieves 8
 
 ## 5. 2023 Predictions
 
+**Model Used**: Logistic Regression (best model, 57.3% accuracy on 2022 holdout)
+
 ### 5.1 Overview
 
 | Predicted Trajectory | Count | Percentage |

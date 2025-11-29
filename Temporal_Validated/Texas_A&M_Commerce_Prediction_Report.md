@@ -22,8 +22,8 @@ The model used 14 features from the school's 2023 financial data:
 |---------|-------|---------|
 | Division | D1 | NCAA Division I school |
 | Total Athletes | 324 | Number of student athletes |
-| Grand Total Revenue | $18,000,481 | Total athletic department revenue |
-| Grand Total Expenses | $17,433,995 | Total athletic department expenses |
+| Grand Total Revenue | $18,000,481 | Total athletic program revenue |
+| Grand Total Expenses | $17,433,995 | Total athletic program expenses |
 | Revenue/Expense Ratio | 1.0325 | Revenue exceeds expenses (healthy) |
 | Revenue Growth (1yr) | +15.62% | Strong revenue growth from 2022 |
 | Expense Growth (1yr) | +13.62% | Expenses also growing rapidly |
@@ -181,7 +181,7 @@ This ensures the model never "sees the future" during training — all predictio
 ## 8. Limitations and Caveats
 
 1. **Low Confidence**: 40% vs 39% is essentially a coin flip — prediction is uncertain
-2. **Model Accuracy**: 54.6% accuracy means the model is wrong ~45% of the time
+2. **Model Accuracy**: 57.3% accuracy means the model is wrong ~43% of the time
 3. **True Future**: 2023→2024 trajectory is unknown — this is a genuine prediction
 4. **External Factors**: Model doesn't account for:
    - COVID-19 impacts

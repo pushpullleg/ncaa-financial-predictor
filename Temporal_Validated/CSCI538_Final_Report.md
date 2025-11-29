@@ -1,6 +1,6 @@
 # CSCI 538 Final Project
 
-# Predicting NCAA Athletic Department Financial Trajectories: A Machine Learning Approach to Identify Improving, Stable, and Declining Programs
+# Predicting NCAA Athletic Program Financial Trajectories: A Machine Learning Approach to Identify Improving, Stable, and Declining Programs
 
 ## Group Members: Mukesh Ravichandran, Abner Lusung
 
@@ -21,7 +21,7 @@
 
 # Abstract
 
-This project develops a machine learning system to predict whether an NCAA athletic department is on an Improving, Stable, or Declining two-year financial trajectory, enabling administrators to act before budgets spiral. Using 10 years of NCAA EADA data (17,220 records from 1,722 institutions), we implemented strict temporal validation by training on 2017-2019 data, validating on 2020-2021, and testing on 2022 holdout data. Our best model (Logistic Regression) achieved 57.3% accuracy, representing a 29% improvement over random baseline. We engineered 14 leak-free features and verified our methodology through seven independent checks to ensure no data leakage. Finally, we generated predictions for all 1,722 institutions for 2023, with 45 high-confidence predictions identified for actionable decision-making. Our work demonstrates that proper temporal validation is essential for trustworthy machine learning in financial forecasting applications.
+This project develops a machine learning system to predict whether an NCAA athletic program is on an Improving, Stable, or Declining two-year financial trajectory, enabling administrators to act before budgets spiral. Using 10 years of NCAA EADA data (17,220 records from 1,722 institutions), we implemented strict temporal validation by training on 2017-2019 data, validating on 2020-2021, and testing on 2022 holdout data. Our best model (Logistic Regression) achieved 57.3% accuracy, representing a 29% improvement over random baseline. We engineered 14 leak-free features and verified our methodology through seven independent checks to ensure no data leakage. Finally, we generated predictions for all 1,722 institutions for 2023, with 45 high-confidence predictions identified for actionable decision-making. Our work demonstrates that proper temporal validation is essential for trustworthy machine learning in financial forecasting applications.
 
 ---
 
@@ -31,7 +31,7 @@ This project develops a machine learning system to predict whether an NCAA athle
 
 Predicting the financial trajectory of NCAA athletic programs is crucial for university administrators, athletic directors, and policy makers who must allocate resources and plan for institutional sustainability. With over 1,700 NCAA member institutions managing billions of dollars in athletic revenues and expenses, the ability to forecast whether a program will improve, remain stable, or decline financially has significant practical implications.
 
-A critical challenge in building such predictive models is avoiding **data leakage**—a subtle but devastating methodological flaw where information from the target variable or future time periods inadvertently influences the training features. Data leakage is particularly problematic in time series prediction, where two common mistakes can inflate accuracy:
+A critical challenge in building such predictive models is avoiding **data leakage**. Data leakage occurs when information that would not be available at prediction time inadvertently influences the model during training. This creates an illusion of high performance that disappears when the model is deployed in real-world scenarios. In time series prediction, data leakage is particularly problematic, where two common mistakes can artificially inflate accuracy:
 
 1. **Target-Derived Features**: Using features derived from the target variable (such as lagged target labels) essentially provides the model with encoded answers as input.
 
@@ -103,17 +103,21 @@ The complete pipeline includes the following executable modules:
 - `models/logistic_regression.pkl`, `random_forest.pkl`, `xgboost.pkl`: Trained models
 - `models/feature_columns.pkl`, `train_medians.pkl`: Preprocessing artifacts
 
-## 2.2 Work in Progress: Modules Designed but Not Implemented
+## 2.2 Future Work: Potential Extensions
 
-- **Hyperparameter Optimization Module**: Grid search or Bayesian optimization for model tuning
-- **Cross-Validation within Temporal Folds**: Time-series cross-validation for more robust validation estimates
+The following modules were not implemented in this project but represent potential extensions for future work:
 
-## 2.3 Future Work: Modules a Future Continuation May Have
+**Model Enhancement:**
+- **Hyperparameter Optimization**: Grid search or Bayesian optimization could potentially improve model performance beyond the fixed hyperparameters we used
+- **Time-Series Cross-Validation**: More sophisticated cross-validation within temporal folds could provide more robust validation estimates
 
-- **Ensemble Voting Classifier**: Combining predictions from multiple models
-- **Deep Learning Module**: LSTM or Transformer architectures for sequence modeling
-- **Real-time Prediction API**: Flask/FastAPI endpoint for live predictions
-- **2024 Validation Module**: Comparing 2023 predictions against actual outcomes when data becomes available
+**Advanced Modeling:**
+- **Ensemble Voting Classifier**: Combining predictions from our three models (Logistic Regression, Random Forest, XGBoost) using voting or stacking could potentially improve accuracy
+- **Deep Learning Module**: LSTM or Transformer architectures for sequence modeling could capture more complex temporal patterns, though they would require larger datasets
+
+**Deployment and Validation:**
+- **Real-time Prediction API**: Flask/FastAPI endpoint for live predictions would enable practical deployment
+- **2024 Validation Module**: When 2024 financial data becomes available, comparing our 2023 predictions against actual outcomes would provide true validation of model performance
 
 ---
 
@@ -153,10 +157,12 @@ Our dataset comes from the **NCAA Equity in Athletics Disclosure Act (EADA)** da
 
 ## 3.4 Data Quality
 
-The EADA data is self-reported by institutions and subject to federal reporting requirements, providing reasonable data quality. We handled missing values by:
-1. Using median imputation with values calculated from training data only
-2. Replacing infinite values (from division operations) with NaN before imputation
+The EADA data is self-reported by institutions and subject to federal reporting requirements, providing reasonable data quality. The original dataset had minimal missing values in the financial variables we used. However, during feature engineering, some division operations (e.g., Revenue / Expenses when Expenses = 0) produced infinite values. We handled these data quality issues by:
+1. Replacing infinite values (from division operations) with NaN
+2. Using median imputation with values calculated from training data only (applied to any NaN values)
 3. Excluding institutions with insufficient historical data for lag calculations
+
+Note: After feature engineering, our processed training data contained zero missing values, confirming that the original dataset was largely complete for the variables we used.
 
 ---
 
@@ -204,10 +210,12 @@ We engineered 14 features that use only current and past data, explicitly avoidi
 **Categorical (1 feature):**
 - `Division`: NCAA division encoded as ordinal (D1=3, D2=2, D3=1, Other=0)
 
-**Forbidden Features** (explicitly excluded to prevent leakage):
-- Any feature containing "Target" or "Label"
-- `Lag1_Target_Label`, `Same_Trajectory_As_Lag`, `Trajectory_Changed`
-- Any forward-looking features using shift(-1)
+**Important Note on Feature Selection**: The 14 features listed above are the only features used in our final model. During feature engineering, we explicitly avoided common data leakage pitfalls by excluding features that would not be available at prediction time. Examples of features we **did not include** (and why they would cause leakage) include:
+- `Lag1_Target_Label`: This would use the previous year's trajectory label as a feature, essentially encoding the answer we're trying to predict
+- `Same_Trajectory_As_Lag` or `Trajectory_Changed`: These compare the current target to historical targets, creating circular dependencies
+- Any forward-looking features using `shift(-1)`: These would use future information that wouldn't be available when making predictions
+
+By documenting these forbidden features, we demonstrate our methodological rigor in ensuring that all 14 features in our model use only information that would genuinely be available at prediction time.
 
 ## 4.3 Temporal Split Strategy
 
@@ -250,12 +258,17 @@ The target classes were imbalanced (approximately 28% Declining, 46% Stable, 26%
 
 ## 4.6 Algorithm Selection Justification
 
-We chose traditional machine learning methods over deep learning for several reasons:
+We chose traditional machine learning methods (Logistic Regression, Random Forest, XGBoost) over deep learning approaches for several practical and methodological reasons:
 
-1. **Dataset Size**: With ~5,000 training samples, traditional methods often outperform deep learning
-2. **Interpretability**: Feature importance from RF and XGBoost aids understanding
-3. **Computational Efficiency**: Faster training and inference
-4. **Baseline Establishment**: Before complex models, establishing what simpler methods achieve
+1. **Dataset Size**: With approximately 5,000 training samples, traditional machine learning methods typically outperform deep learning, which requires much larger datasets to learn meaningful patterns without overfitting.
+
+2. **Interpretability**: Feature importance measures from Random Forest and XGBoost allow us to understand which financial indicators are most predictive, providing actionable insights for stakeholders beyond just predictions.
+
+3. **Computational Efficiency**: Traditional methods train and make predictions much faster than deep learning models, making them more practical for deployment in administrative settings.
+
+4. **Baseline Establishment**: Before exploring complex models, it is important to establish what simpler, well-understood methods can achieve. This provides a solid foundation for future improvements and helps validate that our methodology is sound.
+
+These three algorithms represent different learning paradigms: Logistic Regression (linear relationships), Random Forest (ensemble of decision trees), and XGBoost (gradient boosting), giving us diverse perspectives on the prediction problem.
 
 ---
 
@@ -282,13 +295,19 @@ Logistic Regression achieved the highest accuracy (57.3%), while Random Forest h
 
 ## 5.3 Baseline Comparison
 
+To demonstrate that our model provides genuine predictive value, we compare it against two naive baselines:
+
 | Approach | Accuracy | Improvement |
 |----------|----------|-------------|
 | Random Guessing | 33.3% | — |
 | Most-Frequent Class (Stable) | 28.3% | — |
 | **Our Best Model (LR)** | **57.3%** | **+29.0%** over baseline |
 
-Our model provides a genuine 29 percentage point improvement over random guessing, demonstrating real predictive value despite the inherently difficult prediction problem.
+**Random Guessing** (33.3%): In a balanced three-class problem, randomly guessing would achieve 33.3% accuracy. This represents the absolute minimum baseline.
+
+**Most-Frequent Class Baseline** (28.3%): A common baseline in classification is to always predict the most frequent class in the training data. In our case, this would mean always predicting "Stable" (the most common class). This baseline achieves 28.3% accuracy on the test set, which is actually worse than random guessing because the class distribution in the test set differs from the training set.
+
+Our model's 57.3% accuracy represents a genuine 29 percentage point improvement over the most-frequent-class baseline, demonstrating that the model has learned meaningful patterns rather than simply memorizing class frequencies. This substantial improvement over both naive baselines confirms real predictive value despite the inherently difficult prediction problem.
 
 ## 5.4 Interpreting Model Accuracy
 
@@ -312,7 +331,7 @@ This aligns with domain intuition: recent growth rates are the strongest predict
 
 ## 5.6 2023 Predictions
 
-We generated predictions for all 1,722 institutions for 2023:
+We generated predictions for all 1,722 institutions for 2023 using our best-performing model (Logistic Regression, 57.3% accuracy on 2022 holdout):
 
 | Predicted Trajectory | Count | Percentage |
 |---------------------|-------|------------|
@@ -341,7 +360,7 @@ Our model uses historical data from 2014–2022 to generate true future predicti
 | Testing | 2022 | 1,722 | Final evaluation (57.3% accuracy) |
 | **Prediction** | **2023** | **1,722** | **True future predictions (no labels yet)** |
 
-Using patterns learned from 2017–2022, the model predicts financial trajectories for 2023. These predictions will be validated when 2024 financial data becomes available.
+Using patterns learned from 2017–2022, our best model (Logistic Regression) predicts financial trajectories for 2023. These predictions will be validated when 2024 financial data becomes available.
 
 ### 5.7.1 Example Institutions by Confidence Level
 
@@ -426,7 +445,7 @@ Overall, this case study demonstrates:
 - Implemented feature engineering pipeline (notebook 04)
 - Conducted model evaluation and generated final predictions (notebooks 07-08)
 - Designed and executed leakage verification checks
-- Primary author of project report
+- Co-authored project report
 
 **Abner Lusung:**
 - Defined target variable and classification thresholds (notebook 03)
@@ -434,6 +453,7 @@ Overall, this case study demonstrates:
 - Led model training and hyperparameter selection (notebook 06)
 - Created visualizations for results presentation
 - Prepared presentation materials
+- Co-authored project report
 
 ---
 
@@ -465,7 +485,7 @@ This project successfully developed an NCAA financial trajectory prediction syst
 
 ## 7.4 Practical Implications
 
-For NCAA athletic administrators, our model provides:
+For NCAA athletic program administrators, our model provides:
 - Early warning indicators for financial decline risk
 - Identification of institutions with strong improvement trajectories
 - Decision support tool (not replacement) for resource allocation
@@ -521,7 +541,7 @@ U.S. Department of Education, Office of Postsecondary Education. (2024). Equity 
 
 ### A.1 Mukesh Ravichandran
 
-My primary contribution to this project was leading the data exploration and analysis pipeline, from initial data loading through final predictions. I focused extensively on understanding the challenges of data leakage in time series machine learning and ensuring our methodology avoided these common pitfalls.
+My contribution to this project focused on the data exploration and analysis pipeline, from initial data loading through final predictions. I focused extensively on understanding the challenges of data leakage in time series machine learning and ensuring our methodology avoided these common pitfalls.
 
 I implemented the feature engineering notebook (04_Feature_Engineering.ipynb), carefully designing features that only use current and past data. This required thinking critically about what information would be available at prediction time versus what would constitute leakage. For example, I ensured that growth rates used only historical values and that no target-derived features were included.
 
