@@ -160,7 +160,7 @@ Built for **CSCI 538 - Applied Machine Learning** (November 2025)
 
 ## License
 
-[Include your license here - e.g., MIT, Apache 2.0, or "Academic Use Only"]
+Academic Use Only
 
 ---
 
